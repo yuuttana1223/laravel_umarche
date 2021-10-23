@@ -30,6 +30,13 @@ Route::get('/', function () {
 Route::resource('owners', OwnersController::class)
     ->middleware('auth:admin');
 
+Route::prefix('expired-owners')->middleware('auth:admin')->group(function () {
+    Route::get('', [OwnersController::class, 'expiredOwnerIndex'])
+        ->name('expired-owners');
+    Route::delete('/{owner}', [OwnersController::class, 'expiredOwnerDestroy'])
+        ->name('expired-owners.destroy');
+});
+
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
 })->middleware(['auth:admin'])->name('dashboard');
