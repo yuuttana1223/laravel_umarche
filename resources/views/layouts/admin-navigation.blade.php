@@ -82,6 +82,12 @@
             <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.owners.index')" :active="request()->routeIs('dashboard')">
+                オーナー管理
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.expired-owners')" :active="request()->routeIs('dashboard')">
+                期限切れオーナー一覧
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
