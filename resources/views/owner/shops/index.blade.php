@@ -10,7 +10,20 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     @foreach ($shops as $shop)
-                        {{ $shop->name }}
+                        <a href="{{ route('owner.shops.edit', $shop) }}"
+                            class="block border w-1/2 rounded-md p-4 pb-8">
+                            @if ($shop->is_selling)
+                                <span class="inline-block border p-2 rounded-md bg-blue-400 text-white">販売中</span>
+                            @else
+                                <span class="inline-block border p-2 rounded-md bg-red-400 text-white">停止中</span>
+                            @endif
+                            <h3 class="text-xl my-2">{{ $shop->name }}</h3>
+                            @if (empty($shop->filezname))
+                                <img src="{{ asset('images/no_image.jpg') }}" alt="商品画像なし">
+                            @else
+                                <img src="{{ asset("storage/shops/{$shop->filename}") }}" alt="商品の画像">
+                            @endif
+                        </a>
                     @endforeach
                 </div>
             </div>
