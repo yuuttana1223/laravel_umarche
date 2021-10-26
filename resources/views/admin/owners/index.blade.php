@@ -19,7 +19,7 @@
                                         新規登録
                                     </a>
                                 </div>
-                                <table class="table-auto w-full text-left whitespace-no-wrap">
+                                <table class="table-auto w-full text-left whitespace-no-wrap mb-12">
                                     <thead>
                                         <tr>
                                             <th

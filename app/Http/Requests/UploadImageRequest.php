@@ -25,7 +25,8 @@ class UploadImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => ['required', 'image', 'mimes:jpg, jpeg, png', 'max:2048'],
+            // 画像投稿は必須ではない
+            'image' => ['image', 'mimes:jpg, jpeg, png', 'max:2048'],
         ];
     }
 }

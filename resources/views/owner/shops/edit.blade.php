@@ -15,9 +15,34 @@
                         @csrf
                         @method('PATCH')
                         <div class="p-2 w-1/2 mx-auto">
+                            <label for="name" class="leading-7 text-sm text-gray-600">店名 ※必須</label>
+                            <input type="text" id="name" name="name" value="{{ $shop->name }}" required
+                                class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                        </div>
+                        <div class="p-2 w-1/2 mx-auto">
+                            <label for="information" class="leading-7 text-sm text-gray-600">店舗情報 ※必須</label>
+                            <textarea type="text" id="information" name="information" required rows="10"
+                                class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">{{ $shop->information }}</textarea>
+                        </div>
+                        <div class="p-2 w-1/2 mx-auto">
+                            <div class="w-1/2">
+                                <x-shop-thumbnail :filename="$shop->filename" />
+                            </div>
+                        </div>
+                        <div class="p-2 w-1/2 mx-auto">
                             <label for="image" class="leading-7 text-sm text-gray-600">画像</label>
                             <input type="file" id="image" name="image" accept=".png, .jpeg, .jpg"
-                                class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 outline-none text-gray-700 py-1 px-3 leading-8">
+                        </div>
+                        <div class="p-2 w-1/2 mx-auto text-right">
+                            <label class="mr-2">
+                                <input type="radio" name="is_selling" value="1" class="mr-1"
+                                    {{ $shop->is_selling ? 'checked' : '' }}>販売中
+                            </label>
+                            <label>
+                                <input type="radio" name="is_selling" value="0" class="mr-1"
+                                    {{ $shop->is_selling ? '' : 'checked' }}>停止中
+                            </label>
                         </div>
                         <div class="p-2 w-full flex justify-around mt-4">
                             <a type="button" href="{{ route('owner.shops.index') }}"
