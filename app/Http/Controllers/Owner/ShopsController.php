@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ShopsController extends Controller
 {
@@ -36,14 +36,17 @@ class ShopsController extends Controller
 
     public function update(Request $request, Shop $shop)
     {
-        $shop->name = $request->name;
-        $shop->email = $request->email;
-        $shop->password = Hash::make($request->password);
+        $imageFile = $request->image;
+        // 空じゃないかつアップロードされているか(有効か)
+        if (!empty($imageFile) && $imageFile->isValid()) {
+            // shopsがなければ作成してくれる
+            Storage::putFile('public/shops', $imageFile);
+        }
 
         return redirect()
-            ->route('admin.owner.index')
+            ->route('owner.shops.index')
             ->with([
-                'message' => 'オーナー情報を更新しました。',
+                'message' => '画像を更新しました。',
                 'status' => 'info'
             ]);
     }
