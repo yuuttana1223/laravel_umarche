@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UploadImageRequest;
 use App\Models\Shop;
-use Illuminate\Http\Request;
+use App\Services\ImageService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class ShopsController extends Controller
 {
@@ -35,19 +34,10 @@ class ShopsController extends Controller
         return view('owner.shops.edit', compact('shop'));
     }
 
-    public function update(Request $request, Shop $shop)
+    public function update(UploadImageRequest $request, Shop $shop)
     {
-        $request->validate([
-            'image' => ['required', 'image', 'mimes:jpg, jpeg, png', 'max:2000'],
-        ]);
-        $imageFile = $request->image;
-        // 画像ファイルの名前と乱数の組み合わせ
-        $prefix = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME) . rand();
-        // 名前が同じだと上書きされてしまう(ユニークなidを混ぜる)
-        $fileName = uniqid("{$prefix}_");
+        ImageService::upload($request->image, 'shops');
 
-        $resizedImage = Image::make($imageFile)->resize(1920, 1080)->encode();
-        Storage::put("public/shops/{$fileName}", $resizedImage);
         return redirect()
             ->route('owner.shops.index')
             ->with([
