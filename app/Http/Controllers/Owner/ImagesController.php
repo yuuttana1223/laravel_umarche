@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UploadImageRequest;
 use App\Models\Image;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,7 +38,21 @@ class ImagesController extends Controller
 
     public function store(UploadImageRequest $request)
     {
-        dd($request);
+        foreach ($request->file('files') as $imageFile) {
+            $basename = ImageService::upload($imageFile['image'], 'products');
+            Image::create([
+                'owner_id' => Auth::id(),
+                'filename' => $basename,
+            ]);
+        }
+
+
+        return redirect()
+            ->route('owner.images.index')
+            ->with([
+                'message' => '画像登録を実施しました。',
+                'status' => 'info'
+            ]);
     }
 
     public function edit(Image $image)

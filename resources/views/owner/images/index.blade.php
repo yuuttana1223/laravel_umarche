@@ -16,13 +16,17 @@
                             新規登録
                         </a>
                     </div>
-                    @foreach ($images as $image)
-                        <a href="{{ route('owner.images.edit', $image) }}"
-                            class="block border w-1/4 rounded-md p-4 pb-8">
-                            <h3 class="text-xl my-2">{{ $shop->title }}</h3>
-                            <x-thumbnail :filename="$image->filename" dirname="products" />
-                        </a>
-                    @endforeach
+                    <div class="flex flex-wrap">
+                        @foreach ($images as $image)
+                            <div class="p-2 w-1/4">
+                                <a href="{{ route('owner.images.edit', $image) }}"
+                                    class="block border rounded-md p-4 pb-8">
+                                    <h3 class="text-xl my-2">{{ $image->title }}</h3>
+                                    <x-thumbnail :filename="$image->filename" dirname="products" />
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
                     {{ $images->links() }}
                 </div>
             </div>
