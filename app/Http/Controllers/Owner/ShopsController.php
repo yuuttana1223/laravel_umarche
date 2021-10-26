@@ -7,6 +7,7 @@ use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class ShopsController extends Controller
 {
@@ -36,13 +37,17 @@ class ShopsController extends Controller
 
     public function update(Request $request, Shop $shop)
     {
+        $request->validate([
+            'image' => ['required', 'image', 'mimes:jpg, jpeg, png', 'max:2000'],
+        ]);
         $imageFile = $request->image;
-        // 空じゃないかつアップロードされているか(有効か)
-        if (!empty($imageFile) && $imageFile->isValid()) {
-            // shopsがなければ作成してくれる
-            Storage::putFile('public/shops', $imageFile);
-        }
+        // 画像ファイルの名前と乱数の組み合わせ
+        $prefix = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME) . rand();
+        // 名前が同じだと上書きされてしまう(ユニークなidを混ぜる)
+        $fileName = uniqid("{$prefix}_");
 
+        $resizedImage = Image::make($imageFile)->resize(1920, 1080)->encode();
+        Storage::put("public/shops/{$fileName}", $resizedImage);
         return redirect()
             ->route('owner.shops.index')
             ->with([
