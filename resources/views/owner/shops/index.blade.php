@@ -19,7 +19,8 @@
                                 <span class="inline-block border p-2 rounded-md bg-red-400 text-white">停止中</span>
                             @endif
                             <h3 class="text-xl my-2">{{ $shop->name }}</h3>
-                            <x-shop-thumbnail :filename="$shop->filename" />
+                            <x-thumbnail :filename="$shop->filename" dirname="shops" />
+                            <p class="max-h-50 mt-2 overflow-y-scroll">{!! nl2br(e($shop->information)) !!}</p>
                         </a>
                     @endforeach
                 </div>

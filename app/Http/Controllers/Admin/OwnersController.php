@@ -14,11 +14,6 @@ use Throwable;
 
 class OwnersController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:admin');
-    }
-
     public function index()
     {
         $owners = Owner::select('id', 'name', 'email', 'created_at')->paginate(3);

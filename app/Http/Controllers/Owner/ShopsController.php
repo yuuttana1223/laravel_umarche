@@ -12,8 +12,6 @@ class ShopsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:owners');
-
         $this->middleware(function ($request, $next) {
             $owner = $request->route('shop')->owner;
             if (Auth::id() !== $owner->id) {
