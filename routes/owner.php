@@ -8,6 +8,7 @@ use App\Http\Controllers\Owner\Auth\NewPasswordController;
 use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Owner\Auth\RegisteredUserController;
 use App\Http\Controllers\Owner\Auth\VerifyEmailController;
+use App\Http\Controllers\Owner\ImagesController;
 use App\Http\Controllers\Owner\ShopsController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,9 @@ Route::resource('shops', ShopsController::class)
     ->middleware('auth:owners')
     ->only(['index', 'edit', 'update']);
 
+Route::resource('images', ImagesController::class)
+    ->middleware('auth:owners')
+    ->only(['index', 'store', 'create', 'edit', 'update', 'destroy']);
 
 Route::get('/dashboard', function () {
     return view('owner.dashboard');
