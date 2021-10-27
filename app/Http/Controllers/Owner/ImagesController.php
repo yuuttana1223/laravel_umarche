@@ -38,6 +38,12 @@ class ImagesController extends Controller
 
     public function store(UploadImageRequest $request)
     {
+        $request->validate([
+            'files' => ['required'],
+        ], [
+            'files.required' => '画像が選択されていません。',
+        ]);
+
         foreach ($request->file('files') as $imageFile) {
             $basename = ImageService::upload($imageFile['image'], 'products');
             Image::create([
@@ -57,12 +63,24 @@ class ImagesController extends Controller
 
     public function edit(Image $image)
     {
-        //
+        return view('owner.images.edit', compact('image'));
     }
 
     public function update(Request $request, Image $image)
     {
-        //
+        $request->validate([
+            'title' => ['string', 'max:50'],
+        ]);
+
+        $image->title = $request->title;
+        $image->save();
+
+        return redirect()
+            ->route('owner.images.index')
+            ->with([
+                'message' => '画像情報を更新しました。',
+                'status' => 'info'
+            ]);
     }
 
     public function destroy(Image $image)

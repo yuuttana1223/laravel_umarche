@@ -26,8 +26,18 @@ class UploadImageRequest extends FormRequest
     {
         return [
             // 画像投稿は必須ではない
-            'image' => ['image', 'mimes:jpg, jpeg, png', 'max:2048'],
-            'files.*.image' => ['required', 'image', 'mimes:jpg, jpeg, png', 'max:2048']
+            'image' => ['file', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'files.*.image' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png', 'max:2048']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'file' => '指定されたファイルが正常にアップロードされませんでした。',
+            'image' => '指定されたファイルが画像ではありません。',
+            'mimes' => '指定された拡張子(jpg/jpeg/png)ではありません。',
+            'max' => 'ファイルサイズは2MB以内にしてください。',
         ];
     }
 }

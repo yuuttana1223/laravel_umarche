@@ -20,9 +20,9 @@
                         @foreach ($images as $image)
                             <div class="p-2 w-1/4">
                                 <a href="{{ route('owner.images.edit', $image) }}"
-                                    class="block border rounded-md p-4 pb-8">
-                                    <h3 class="text-xl my-2">{{ $image->title }}</h3>
+                                    class="block border rounded-md p-2 md:p-4 md:pb-8">
                                     <x-thumbnail :filename="$image->filename" dirname="products" />
+                                    <h3 class="text-gray-700">{{ $image->title }}</h3>
                                 </a>
                             </div>
                         @endforeach
