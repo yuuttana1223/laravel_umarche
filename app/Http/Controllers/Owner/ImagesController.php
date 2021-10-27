@@ -8,6 +8,7 @@ use App\Models\Image;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ImagesController extends Controller
 {
@@ -85,6 +86,18 @@ class ImagesController extends Controller
 
     public function destroy(Image $image)
     {
-        //
+        $filePath = "public/products/{$image->filename}";
+        if (Storage::exists($filePath)) {
+            Storage::delete($filePath);
+        }
+
+        $image->delete();
+
+        return redirect()
+            ->route('owner.images.index')
+            ->with([
+                'message' => '画像を削除しました。',
+                'status' => 'alert'
+            ]);
     }
 }

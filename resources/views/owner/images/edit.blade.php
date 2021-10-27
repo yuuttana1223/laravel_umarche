@@ -28,11 +28,34 @@
                             <a type="button" href="{{ route('owner.images.index') }}"
                                 class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">戻る</a>
                             <button
-                                class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">更新する</button>
+                                class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">更新</button>
+                        </div>
+                    </form>
+                    <form action="{{ route('owner.images.destroy', $image) }}" method="post" class="delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <div class="w-full text-center p-2 mt-4">
+                            <button
+                                class="text-white bg-red-400 border-0 py-1 md:py-2 px-1 md:px-4 focus:outline-none hover:bg-red-500 rounded">
+                                削除
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        "use strict";
+
+        {
+            document.querySelector(".delete-form").addEventListener("submit", (e) => {
+                e.preventDefault();
+                if (!confirm("本当に削除してもいいですか?")) {
+                    return;
+                }
+                e.target.submit();
+            })
+        }
+    </script>
 </x-app-layout>
