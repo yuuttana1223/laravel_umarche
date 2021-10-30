@@ -9,6 +9,7 @@ use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Owner\Auth\RegisteredUserController;
 use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 use App\Http\Controllers\Owner\ImagesController;
+use App\Http\Controllers\Owner\ProductsController;
 use App\Http\Controllers\Owner\ShopsController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,10 @@ Route::resource('shops', ShopsController::class)
     ->only(['index', 'edit', 'update']);
 
 Route::resource('images', ImagesController::class)
+    ->middleware('auth:owners')
+    ->only(['index', 'store', 'create', 'edit', 'update', 'destroy']);
+
+Route::resource('products', ProductsController::class)
     ->middleware('auth:owners')
     ->only(['index', 'store', 'create', 'edit', 'update', 'destroy']);
 
