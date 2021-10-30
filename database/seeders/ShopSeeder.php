@@ -14,7 +14,6 @@ class ShopSeeder extends Seeder
      */
     public function run()
     {
-
         for ($i = 1; $i <= 10; $i++) {
             DB::table('shops')->insert([
                 'owner_id' => $i,
