@@ -12,7 +12,7 @@
                     <form action="{{ route('owner.products.store') }}" method="post" class="-m-2">
                         <x-auth-validation-errors class="mb-4" :errors="$errors" />
                         @csrf
-                        <div class="p-2 w-1/2 mx-auto">
+                        <div class="p-2 w-1/2 mx-auto mb-8">
                             <label for="category" class="leading-7 text-sm text-gray-600">カテゴリー</label>
                             <select name="category" id="category"
                                 class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 outline-none text-gray-700 py-1 px-3 leading-8">
@@ -26,28 +26,54 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="p-2 w-full flex justify-around mt-4">
-                            <a type="button" href="{{ route('owner.products.index') }}"
-                                class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">戻る</a>
-                            <button
-                                class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
-                        </div>
-                    </form>
+                        <x-select-image-modal :images="$images" />
+                        @for ($i = 1; $i <= 4; $i++)
+                            <div class="flex justify-around items-center mb-4 h-48">
+                                <a data-micromodal-trigger="modal-1" href='javascript:;'
+                                    class="md:py-1 md:px-2 bg-gray-200">画像を選択</a>
+                                <input type="hidden" name="{{ "image$i" }}">
+                                <div class="w-1/4" id="image-wrap{{ $i }}">
+                                </div>
+                            </div>
+                        @endfor
                 </div>
             </div>
+            <div class="p-2 w-full flex justify-around mt-4">
+                <a type="button" href="{{ route('owner.products.index') }}"
+                    class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">戻る</a>
+                <button
+                    class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+            </div>
+            </form>
         </div>
+    </div>
+    </div>
     </div>
     <script>
         "use strict";
 
         {
-            document.querySelector(".delete-form").addEventListener("submit", (e) => {
-                e.preventDefault();
-                if (!confirm("本当に削除してもいいですか?")) {
-                    return;
-                }
-                e.target.submit();
-            })
+            const selectButtons = document.querySelectorAll("a[href='javascript:;']");
+
+            selectButtons.forEach((selectBtn, index) => {
+                selectBtn.addEventListener("click", (e) => {
+                    const input = e.target.nextElementSibling
+                    // モーダル出現
+                    document.querySelectorAll(".image").forEach((modalImage) => {
+                        // イベントを上書き
+                        modalImage.onclick = ((e) => {
+                            input.value = e.target.dataset.id;
+                            const selectImage = document.createElement("img");
+                            selectImage.src = modalImage.src;
+                            const imageParent = document.getElementById(
+                                `image-wrap${index + 1}`);
+                            imageParent.innerHTML = "";
+                            imageParent.appendChild(selectImage);
+                            MicroModal.close();
+                        });
+                    });
+                });
+            });
         }
     </script>
 </x-app-layout>
