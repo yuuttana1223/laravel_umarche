@@ -106,6 +106,30 @@ class ProductsController extends Controller
 
     public function edit(Product $product)
     {
+        $quantity = $product->stocks()->sum('quantity');
+
+        $shops = Auth::user()->shops()
+            ->select('id', 'name')
+            ->get();
+
+        $images = Auth::user()->images()
+            ->select('id', 'title', 'filename')
+            ->get();
+
+        $currentImages = [
+            $product->imageFirst,
+            $product->imageSecond,
+            $product->imageThird,
+            $product->imageFourth,
+        ];
+
+        $categories = PrimaryCategory::with('categories')
+            ->get();
+
+        return view(
+            'owner.products.edit',
+            compact('product', 'quantity', 'shops', 'images', 'currentImages', 'categories')
+        );
     }
 
     public function update(Request $request, Product $product)

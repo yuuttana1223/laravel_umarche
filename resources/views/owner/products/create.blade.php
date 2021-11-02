@@ -70,7 +70,7 @@
                             <div class="flex justify-around items-center mb-4 h-48">
                                 <a data-micromodal-trigger="modal-1" href='javascript:;'
                                     class="md:py-1 md:px-2 bg-gray-200">画像を選択</a>
-                                <input type="hidden" name="{{ "image$i" }}">
+                                <input type="hidden" name="image{{ $i }}">
                                 <div class="w-1/4" id="image-wrap{{ $i }}">
                                 </div>
                             </div>
