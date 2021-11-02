@@ -11,6 +11,12 @@ class Stock extends Model
 
     protected $table = 't_stocks';
 
+    protected $fillable = [
+        'product_id',
+        'type',
+        'quantity',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);

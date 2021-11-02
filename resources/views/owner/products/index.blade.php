@@ -21,8 +21,9 @@
                             <div class="p-2 w-1/4">
                                 <a href="{{ route('owner.products.edit', $product) }}"
                                     class="block border rounded-md p-2 md:p-4 md:pb-8">
-                                    <x-thumbnail :filename="$product->imageFirst->filename" dirname="products" />
-                                    {{-- <h3 class="text-gray-700">{{ $product->name }}</h3> --}}
+                                    <x-thumbnail filename="{{ $product->imageFirst->filename ?? '' }}"
+                                        dirname="products" />
+                                    <h3 class="text-gray-700">{{ $product->name }}</h3>
                                 </a>
                             </div>
                         @endforeach

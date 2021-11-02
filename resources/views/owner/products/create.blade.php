@@ -44,8 +44,8 @@
                             </select>
                         </div>
                         <div class="p-2 w-1/2 mx-auto mb-8">
-                            <label for="category" class="leading-7 text-sm text-gray-600">カテゴリー ※必須</label>
-                            <select name="category" id="category"
+                            <label for="secondary_category_id" class="leading-7 text-sm text-gray-600">カテゴリー ※必須</label>
+                            <select name="secondary_category_id" id="secondary_category_id"
                                 class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 outline-none text-gray-700 py-1 px-3 leading-8">
                                 @foreach ($categories as $primaryCategory)
                                     <optgroup label="{{ $primaryCategory->name }}">
@@ -59,12 +59,10 @@
                         </div>
                         <div class="p-2 w-1/2 mx-auto text-right mb-8">
                             <label class="mr-2">
-                                <input type="radio" name="is_selling" value="{{ old('is_selling') }}"
-                                    class="mr-1" checked>販売中
+                                <input type="radio" name="is_selling" value="1" class="mr-1" checked>販売中
                             </label>
                             <label>
-                                <input type="radio" name="is_selling" value="{{ old('is_selling') }}"
-                                    class="mr-1">停止中
+                                <input type="radio" name="is_selling" value="0" class="mr-1">停止中
                             </label>
                         </div>
                         <x-select-image-modal :images="$images" />
