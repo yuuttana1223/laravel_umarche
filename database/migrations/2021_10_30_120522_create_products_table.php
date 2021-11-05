@@ -29,18 +29,14 @@ class CreateProductsTable extends Migration
                 ->onDelete('cascade');
             $table->foreignId('secondary_category_id')
                 ->constrained();
-            $table->foreignId('image1')
-                ->nullable()
-                ->constrained('images');
-            $table->foreignId('image2')
-                ->nullable()
-                ->constrained('images');
-            $table->foreignId('image3')
-                ->nullable()
-                ->constrained('images');
-            $table->foreignId('image4')
-                ->nullable()
-                ->constrained('images');
+            $table->unsignedBigInteger('image1')
+                ->nullable();
+            $table->unsignedBigInteger('image2')
+                ->nullable();
+            $table->unsignedBigInteger('image3')
+                ->nullable();
+            $table->unsignedBigInteger('image4')
+                ->nullable();
             $table->timestamps();
         });
     }
