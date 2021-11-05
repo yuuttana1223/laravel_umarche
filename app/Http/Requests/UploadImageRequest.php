@@ -13,7 +13,6 @@ class UploadImageRequest extends FormRequest
      */
     public function authorize()
     {
-        // trueにしないとエラーメッセージではなく403エラーを返す
         return true;
     }
 

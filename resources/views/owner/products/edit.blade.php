@@ -11,42 +11,50 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form action="{{ route('owner.products.update', $product) }}" method="post" class="-m-2">
                         <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                        <x-flash-message :status="session('status')" />
                         @csrf
                         @method('PATCH')
                         <div class="p-2 w-1/2 mx-auto">
                             <label for="name" class="leading-7 text-sm text-gray-600">商品名 ※必須</label>
-                            <input type="text" id="name" name="name" value="{{ $product->name }}" required
+                            <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}"
+                                required
                                 class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                         </div>
                         <div class="p-2 w-1/2 mx-auto">
                             <label for="information" class="leading-7 text-sm text-gray-600">商品情報 ※必須</label>
                             <textarea type="text" id="information" name="information" required rows="10"
-                                class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">{{ $product->information }}</textarea>
+                                class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">{{ old('information', $product->information) }}</textarea>
                         </div>
                         <div class="p-2 w-1/2 mx-auto">
                             <label for="price" class="leading-7 text-sm text-gray-600">価格 ※必須</label>
-                            <input type="number" id="price" name="price" value="{{ $product->price }}" required
+                            <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}"
+                                required
                                 class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                         </div>
                         <div class="p-2 w-1/2 mx-auto">
                             <h3 class="leading-7 text-sm text-gray-600">現在の在庫</h3>
+                            {{-- 楽観的ロック用 --}}
                             <input type="hidden" id="current_quantity" name="current_quantity"
                                 value="{{ $quantity }}">
                             <p class="leading-8 py-1 px-3">
                                 {{ $quantity }}</p>
                         </div>
                         <div class="p-2 w-1/2 mx-auto">
-                            <label for="quantity" class="block leading-7 text-sm text-gray-600">数量
-                                0~99の範囲で入力してください</label>
+                            <label for="quantity"
+                                class="block leading-7 text-sm text-gray-600">現在の在庫から増やす(減らす)数量</label>
                             <div class="flex justify-between">
-                                <input type="number" id="quantity" name="quantity" value="0" required
+                                <input type="number" id="quantity" name="quantity" value="{{ old('quantity', 0) }}"
+                                    required
                                     class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200  outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                 <div class="leading-9">
                                     <label class="mr-2">
-                                        <input type="radio" name="type" value="1" class="mr-1" checked>増やす
+                                        <input type="radio" name="type" value="1" class="mr-1"
+                                            {{ old('type') === '1' ? 'checked' : '' }}
+                                            {{ is_null(old('type')) ? 'checked' : '' }}>増やす
                                     </label>
                                     <label>
-                                        <input type="radio" name="type" value="2" class="mr-1">減らす
+                                        <input type="radio" name="type" value="2" class="mr-1"
+                                            {{ old('type') === '2' ? 'checked' : '' }}>減らす
                                     </label>
                                 </div>
                             </div>
@@ -56,7 +64,7 @@
                             <select name="shop_id" id="shop_id"
                                 class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 outline-none text-gray-700 py-1 px-3 leading-8">
                                 @foreach ($shops as $shop)
-                                    <option value="{{ $shop->id }}">
+                                    <option value="{{ old('shop_id', $shop->id) }}">
                                         {{ $shop->name }}
                                     </option>
                                 @endforeach
@@ -69,22 +77,25 @@
                                 @foreach ($categories as $primaryCategory)
                                     <optgroup label="{{ $primaryCategory->name }}">
                                         @foreach ($primaryCategory->categories as $secondaryCategory)
-                                            <option value="{{ $secondaryCategory->id }}"
+                                            <option value="{{ $secondaryCategory->id }}" @if (!is_null(old('secondary_category_id')))
+                                                {{ old('secondary_category_id') === (string) $secondaryCategory->id ? 'selected' : '' }}>
+                                            @else
                                                 {{ $product->secondary_category_id === $secondaryCategory->id ? 'selected' : '' }}>
-                                                {{ $secondaryCategory->name }}
-                                            </option>
-                                        @endforeach
+                                        @endif
+                                        {{ $secondaryCategory->name }}
+                                        </option>
+                                @endforeach
                                 @endforeach
                             </select>
                         </div>
                         <div class="p-2 w-1/2 mx-auto text-right mb-8">
                             <label class="mr-2">
                                 <input type="radio" name="is_selling" value="1" class="mr-1"
-                                    {{ $product->is_selling ? 'checked' : '' }}>販売中
+                                    {{ old('is_selling', (string) $product->is_selling) === '1' ? 'checked' : '' }}>販売中
                             </label>
                             <label>
                                 <input type="radio" name="is_selling" value="0" class="mr-1"
-                                    {{ $product->is_selling ? '' : 'checked' }}>停止中
+                                    {{ old('is_selling', (string) $product->is_selling) === '0' ? 'checked' : '' }}>停止中
                             </label>
                         </div>
                         <x-select-image-modal :images="$images" />
@@ -93,13 +104,18 @@
                             <div class="flex justify-around items-center mb-4 h-48">
                                 <a data-micromodal-trigger="modal-1" href='javascript:;'
                                     class="md:py-1 md:px-2 bg-gray-200">画像を編集</a>
-                                <input type="hidden" name="image{{ $loop->index + 1 }}">
+                                <input type="hidden" name="image{{ $loop->index + 1 }}" @if((is_null(old('image' . $loop->index + 1)))) value="{{ $image->id ?? '' }}" @else value="{{ old('image' . $loop->index + 1) ?? '' }}" @endif>
                                 <div class="w-1/4" id="image-wrap{{ $loop->index + 1 }}">
-                                    @if (isset($image->filename))
+                                    @if (is_null(old('image' . $loop->index + 1)) && isset($image->filename))
                                         <img src="{{ asset("storage/products/{$image->filename}") }}"
                                             alt="{{ $image->title }}" class="border rounded-md p-2 md:p-4 md:pb-6">
+                                    @elseif (isset($images[old('image' . $loop->index + 1) - 1]->filename))
+                                        <img src="{{ asset('storage/products/' . $images[old('image' . $loop->index + 1) - 1]->filename) }}"
+                                            alt="{{ $images[old('image' . $loop->index + 1) - 1]->title }}"
+                                            class="border rounded-md p-2 md:p-4 md:pb-6">
                                     @endif
                                 </div>
+                                <button type="button" class="delete-image md:py-1 md:px-2 bg-red-400">画像を削除</button>
                             </div>
                         @endforeach
                         <div class="p-2 w-full flex justify-around mt-4">
@@ -138,6 +154,13 @@
                     });
                 });
             });
+
+            document.querySelectorAll(".delete-image").forEach((deleteImage, index) => {
+                deleteImage.addEventListener("click", (e) => {
+                    e.target.previousElementSibling.innerHTML = "";
+                    document.querySelector(`input[name=image${index + 1}]`).value = "";
+                })
+            })
         }
     </script>
 </x-app-layout>

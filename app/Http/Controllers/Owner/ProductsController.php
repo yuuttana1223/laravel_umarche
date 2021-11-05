@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
 use App\Models\PrimaryCategory;
 use App\Models\Product;
 use App\Models\Stock;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -51,22 +51,8 @@ class ProductsController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:50'],
-            'information' => ['required', 'string', 'max:1000'],
-            'price' => ['required', 'integer'],
-            'shop_id' => ['required', 'exists:shops,id'],
-            'secondary_category_id' => ['required', 'exists:secondary_categories,id'],
-            'is_selling' => ['required'],
-            'image1' => ['nullable', 'exists:images,id'],
-            'image2' => ['nullable', 'exists:images,id'],
-            'image3' => ['nullable', 'exists:images,id'],
-            'image4' => ['nullable', 'exists:images,id'],
-        ]);
-
-
         try {
             // useに使う変数を記述
             DB::transaction(function () use ($request) {
@@ -132,8 +118,60 @@ class ProductsController extends Controller
         );
     }
 
-    public function update(Request $request, Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
+        $request->validate([
+            'current_quantity' => ['required', 'integer', 'between:0,100000000'],
+            'type' => ['required', 'integer', 'between:1,2'],
+        ]);
+
+        $quantity = $product->stocks()->sum('quantity');
+
+        if ($request->current_quantity !== $quantity) {
+            return redirect()
+                ->route('owner.products.edit', $product)
+                ->with([
+                    'message' => '在庫数が変更されています。再度確認してください。',
+                    'status' => 'alert',
+                ]);
+        }
+
+        try {
+            // useに使う変数を記述
+            DB::transaction(function () use ($request, $product) {
+                $product->name = $request->name;
+                $product->information = $request->information;
+                $product->price = $request->price;
+                $product->shop_id = $request->shop_id;
+                $product->secondary_category_id = $request->secondary_category_id;
+                $product->is_selling = $request->is_selling;
+                $product->image1 = $request->image1;
+                $product->image2 = $request->image2;
+                $product->image3 = $request->image3;
+                $product->image4 = $request->image4;
+                $product->save();
+
+                $quantity = (int) $request->quantity;
+                $type = $request->type;
+                $quantity = ($type === '2') ? $quantity * -1 : $quantity;
+
+                Stock::create([
+                    'product_id' => $product->id,
+                    'type' => $type,
+                    'quantity' => $quantity,
+                ]);
+            });
+        } catch (Throwable $e) {
+            Log::error($e);
+            throw $e;
+        }
+
+        return redirect()
+            ->route('owner.products.index')
+            ->with([
+                'message' => '商品情報を更新しました。',
+                'status' => 'info',
+            ]);
     }
 
     public function destroy(Product $product)
