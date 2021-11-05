@@ -177,5 +177,13 @@ class ProductsController extends Controller
 
     public function destroy(Product $product)
     {
+        $product->delete();
+
+        return redirect()
+            ->route('owner.products.index')
+            ->with([
+                'message' => '商品を削除しました。',
+                'status' => 'alert'
+            ]);
     }
 }
