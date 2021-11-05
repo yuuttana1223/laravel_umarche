@@ -40,8 +40,7 @@
                                 {{ $quantity }}</p>
                         </div>
                         <div class="p-2 w-1/2 mx-auto">
-                            <label for="quantity"
-                                class="block leading-7 text-sm text-gray-600">現在の在庫から増やす(減らす)数量</label>
+                            <label for="quantity" class="block leading-7 text-sm text-gray-600"></label>
                             <div class="flex justify-between">
                                 <input type="number" id="quantity" name="quantity" value="{{ old('quantity', 0) }}"
                                     required
@@ -51,7 +50,7 @@
                                         <input type="radio" name="type" value="{{ \ProductConstant::ADD }}"
                                             class="mr-1"
                                             {{ old('type') === \ProductConstant::ADD ? 'checked' : '' }}
-                                            {{ is_null(old('type')) ? 'checked' : '' }}>増やす
+                                            {{ is_null(old('type')) ? 'checked' : '' }} id="add">増やす
                                     </label>
                                     <label>
                                         <input type="radio" name="type" value="{{ \ProductConstant::REDUCE }}"
@@ -163,6 +162,25 @@
                     document.querySelector(`input[name=image${index + 1}]`).value = "";
                 })
             })
+
+            const increaseWord = "現在の在庫から増やす数量";
+            const decreaseWord = "現在の在庫から減らす数量"
+            const typeButtons = document.querySelectorAll("input[name='type']");
+            const quantityLabel = document.querySelector("label[for='quantity']");
+            quantityLabel.innerText = (typeButtons[0].checked) ? increaseWord : decreaseWord;
+            console.log(typeButtons[0].value);
+            typeButtons.forEach((typeButton) => {
+                typeButton.addEventListener("click", (e) => {
+                    switch (e.target.value) {
+                        case "1":
+                            quantityLabel.innerText = increaseWord;
+                            break;
+                        case "2":
+                            quantityLabel.innerText = decreaseWord;
+                            break;
+                    }
+                });
+            });
         }
     </script>
 </x-app-layout>
