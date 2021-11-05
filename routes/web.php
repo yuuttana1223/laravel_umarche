@@ -5,13 +5,11 @@ use App\Http\Controllers\LifeCycleTestController;
 use App\Http\Controllers\User\ItemsController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('user.index');
+Route::middleware('auth:users')->group(function () {
+    Route::get('/', [ItemsController::class, 'index'])
+        ->name('items.index');
 });
 
-Route::resource('items', ItemsController::class)
-    ->middleware('auth:users')
-    ->only(['index']);
 
 Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
 Route::get('/component-test2', [ComponentTestController::class, 'showComponent2']);

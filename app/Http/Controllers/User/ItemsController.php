@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ItemsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('user.index');
+        $products = Product::all();
+
+        return view('user.index', compact('products'));
     }
 }
