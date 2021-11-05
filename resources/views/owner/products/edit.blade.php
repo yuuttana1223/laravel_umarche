@@ -48,13 +48,15 @@
                                     class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200  outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                 <div class="leading-9">
                                     <label class="mr-2">
-                                        <input type="radio" name="type" value="1" class="mr-1"
-                                            {{ old('type') === '1' ? 'checked' : '' }}
+                                        <input type="radio" name="type" value="{{ \ProductConstant::ADD }}"
+                                            class="mr-1"
+                                            {{ old('type') === \ProductConstant::ADD ? 'checked' : '' }}
                                             {{ is_null(old('type')) ? 'checked' : '' }}>増やす
                                     </label>
                                     <label>
-                                        <input type="radio" name="type" value="2" class="mr-1"
-                                            {{ old('type') === '2' ? 'checked' : '' }}>減らす
+                                        <input type="radio" name="type" value="{{ \ProductConstant::REDUCE }}"
+                                            class="mr-1"
+                                            {{ old('type') === \ProductConstant::REDUCE ? 'checked' : '' }}>減らす
                                     </label>
                                 </div>
                             </div>

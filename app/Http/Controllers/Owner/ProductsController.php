@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Owner;
 
+use App\Constants\ProductConstant;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\PrimaryCategory;
@@ -153,7 +154,7 @@ class ProductsController extends Controller
 
                 $quantity = (int) $request->quantity;
                 $type = $request->type;
-                $quantity = ($type === '2') ? $quantity * -1 : $quantity;
+                $quantity = ($type === \ProductConstant::REDUCE) ? $quantity * -1 : $quantity;
 
                 Stock::create([
                     'product_id' => $product->id,
