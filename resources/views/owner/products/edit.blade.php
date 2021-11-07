@@ -99,7 +99,23 @@
                                     {{ old('is_selling', (string) $product->is_selling) === '0' ? 'checked' : '' }}>停止中
                             </label>
                         </div>
-                        <x-select-image-modal :images="$images" />
+                        <x-modal>
+                            <x-slot name="modalHeader">
+                                画像を選択してください
+                            </x-slot>
+                            <x-slot name="modalContent">
+                                <div class="flex flex-wrap">
+                                    @foreach ($images as $image)
+                                        <div class="w-1/4 p-2">
+                                            <img class="p-2 border rounded-md cursor-pointer image hover:opacity-80 md:p-4 md:pb-8"
+                                                data-id="{{ $image->id }}"
+                                                src="{{ asset("storage/products/{$image->filename}") }}"
+                                                alt="{{ $image->title }}" />
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </x-slot>
+                        </x-modal>
 
                         @foreach ($currentImages as $image)
                             <div class="flex items-center justify-around h-48 mb-4">

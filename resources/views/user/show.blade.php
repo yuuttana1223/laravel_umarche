@@ -65,9 +65,31 @@
                             </div>
                         </div>
                     </div>
+                    <div class="my-8 text-center border-t border-green-400">
+                        <h3 class="mt-4">この商品を販売しているショップ</h3>
+                        <h2 class="mt-4">{{ $product->shop->name }}</h2>
+                        <div class="mt-4">
+                            @if (!is_null($product->shop->filename))
+                                <img src="{{ asset("storage/shops/{$product->shop->filename}") }}"
+                                    alt="{{ "{$product->shop->name}の画像" }}"
+                                    class="object-cover w-40 h-40 mx-auto rounded-full">
+                            @endif
+                        </div>
+                        <x-modal>
+                            <x-slot name="modalHeader">
+                                {{ $product->shop->name }}
+                            </x-slot>
+                            <x-slot name="modalContent">
+                                {{ $product->shop->information }}
+                            </x-slot>
+                        </x-modal>
+                        <a data-micromodal-trigger="modal-1" href='javascript:;' type="button"
+                            class="px-2 py-1 mx-auto mt-4 text-white bg-gray-500 border-0 rounded md:py-2 md:px-6 focus:outline-none hover:bg-gray-600">ショップの詳細を見る</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="{{ mix('js/micromodal.js') }}"></script>
     <script src="{{ mix('js/swiper.js') }}"></script>
 </x-app-layout>

@@ -14,12 +14,12 @@ class ShopSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             DB::table('shops')->insert([
                 'owner_id' => $i,
                 'name' => "店名$i",
                 'information' => "ここに店名{$i}の情報が入ります。ここに店名{$i}の情報が入ります。ここに店名{$i}の情報が入ります。ここに店名{$i}の情報が入ります。",
-                'filename' => '',
+                'filename' => "sample{$i}.jpg",
                 'is_selling' => true,
             ]);
         }
