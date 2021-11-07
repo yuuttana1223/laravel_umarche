@@ -41,6 +41,11 @@ class ItemsController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
-        return view('user.show', compact('product'));
+        $quantity = $product->stocks()->sum('quantity');
+
+        return view(
+            'user.show',
+            compact('product', 'quantity')
+        );
     }
 }

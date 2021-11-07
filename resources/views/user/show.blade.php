@@ -46,22 +46,30 @@
                                 {{ $product->information }}
                             </p>
                             <div class="mt-3 text-center md:flex md:justify-around">
-                                <p class="text-2xl font-medium text-gray-900 title-font">
+                                <p class="mt-3 text-2xl font-medium text-gray-900 title-font">
                                     {{ number_format($product->price) }}
-                                    <span class="text-sm text-gray-500">円(税込)</span>
+                                    <span class="mt-3 text-sm text-gray-500">円(税込)</span>
                                 </p>
                                 <div class="md:flex md:items-center md:flex-wrap">
-                                    <h3 class="mr-3">数量</h3>
-                                    <select
-                                        class="py-2 pl-3 pr-10 text-base border border-gray-300 rounded appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 md:block">
-                                        <option>SM</option>
-                                        <option>M</option>
-                                        <option>L</option>
-                                        <option>XL</option>
+                                    <h3 class="mt-3 mr-3">数量</h3>
+                                    <select name="quantity"
+                                        class="py-2 pl-3 pr-10 mt-3 text-base border border-gray-300 rounded appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 md:block">
+                                        @if ($quantity >= 100)
+                                            @for ($i = 0; $i <= 99; $i++)
+                                                <option value="{{ $i }}">{{ $i }}</option>
+                                            @endfor
+                                        @else
+                                            @for ($i = 0; $i <= $quantity; $i++)
+                                                <option value="{{ $i }}">{{ $i }}</option>
+                                            @endfor
+                                        @endif
                                     </select>
+                                    @if ($quantity < 10)
+                                        <p class="mt-3 ml-2 text-sm text-red-500">(残り{{ $quantity }}個)</p>
+                                    @endif
                                 </div>
                                 <button
-                                    class="px-2 py-1 text-white bg-indigo-500 border-0 rounded md:py-2 md:px-6 focus:outline-none hover:bg-indigo-600 md:block">カートに入れる</button>
+                                    class="px-2 py-1 mt-3 text-white bg-indigo-500 border-0 rounded md:py-2 md:px-6 focus:outline-none hover:bg-indigo-600 md:block">カートに入れる</button>
                             </div>
                         </div>
                     </div>
