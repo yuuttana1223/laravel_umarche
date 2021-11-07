@@ -14,7 +14,7 @@ class ImageSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 4; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             DB::table('images')->insert([
                 'owner_id' => 1,
                 'filename' => "sample{$i}.jpg",

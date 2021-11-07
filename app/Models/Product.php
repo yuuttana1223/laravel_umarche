@@ -58,6 +58,16 @@ class Product extends Model
         return $this->belongsTo(Image::class, 'image4');
     }
 
+    public function getImages()
+    {
+        return
+            Image::where('id', $this->image1)
+            ->orWhere('id', $this->image2)
+            ->orWhere('id', $this->image3)
+            ->orWhere('id', $this->image4)
+            ->get();
+    }
+
     public function stocks()
     {
         return $this->hasMany(Stock::class);

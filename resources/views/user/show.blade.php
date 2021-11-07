@@ -11,7 +11,30 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="md:flex md:justify-around">
                         <div class="md:w-1/2">
-                            <x-thumbnail filename="{{ $product->imageFirst->filename ?? '' }}" dirname="products" />
+                            <!-- Slider main container -->
+                            <div class="swiper">
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                    <!-- Slides -->
+                                    @foreach ($product->getImages() as $image)
+                                        @if (!is_null($image))
+                                            <div class="swiper-slide">
+                                                <img src="{{ asset("storage/products/{$image->filename}") }}"
+                                                    alt="{{ $image->title ?? '商品画像' . $loop->index + 1 }}">
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                                <!-- If we need pagination -->
+                                <div class="swiper-pagination"></div>
+
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+
+                                <!-- If we need scrollbar -->
+                                <div class="swiper-scrollbar"></div>
+                            </div>
                         </div>
                         <div class="ml-4 md:w-1/2">
                             <h3 class="mt-3 text-sm tracking-widest text-gray-500 title-font">
@@ -46,4 +69,5 @@
             </div>
         </div>
     </div>
+    <script src="{{ mix('js/swiper.js') }}"></script>
 </x-app-layout>

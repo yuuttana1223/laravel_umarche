@@ -32353,6 +32353,11 @@ select {
   will-change: transform;
 }
 
+.swiper {
+  /* width: 600px; */
+  height: 300px;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
