@@ -1,32 +1,32 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             期限切れオーナー一覧
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <section class="text-gray-600 body-font">
                         <div class="container px-5mx-auto">
                             <x-flash-message :status="session('status')" />
-                            <div class="lg:w-2/3 w-full mx-auto overflow-auto">
-                                <table class="table-auto w-full text-left whitespace-no-wrap">
+                            <div class="w-full mx-auto overflow-auto lg:w-2/3">
+                                <table class="w-full text-left whitespace-no-wrap table-auto">
                                     <thead>
                                         <tr>
                                             <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
+                                                class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 rounded-tl rounded-bl title-font">
                                                 名前</th>
                                             <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                                class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font">
                                                 メールアドレス</th>
                                             <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                                class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font">
                                                 期限切れ日</th>
                                             <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
+                                                class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 rounded-tr rounded-br title-font">
                                             </th>
                                         </tr>
                                     </thead>
@@ -43,8 +43,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button
-                                                            class="
-                                                            text-white bg-red-400 border-0 py-2 px-4 focus:outline-none hover:bg-red-500 rounded">
+                                                            class="px-4 py-2 text-white bg-red-400 border-0 rounded focus:outline-none hover:bg-red-500">
                                                             完全に削除
                                                         </button>
                                                     </form>
@@ -60,21 +59,6 @@
             </div>
         </div>
     </div>
-    <script>
-        "use strict";
-
-        {
-            const deleteForms = document.querySelectorAll(".delete-form");
-            deleteForms.forEach((deleteForm) => {
-                deleteForm.addEventListener("submit", (e) => {
-                    e.preventDefault();
-                    if (!confirm("本当に削除してもいいですか?")) {
-                        return;
-                    }
-                    deleteForm.submit();
-                })
-            });
-        }
-    </script>
+    <script src="{{ asset('js/admin/owners/expired-owners.js') }}"></script>
 
 </x-app-layout>
