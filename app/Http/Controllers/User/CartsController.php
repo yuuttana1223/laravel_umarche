@@ -35,6 +35,14 @@ class CartsController extends Controller
         );
     }
 
+    public function destroy(User $user, Cart $cart)
+    {
+        $cart->delete();
+
+        return redirect()
+            ->route('user.carts.index', $user);
+    }
+
     public function add(Request $request, User $user)
     {
         $cart = Cart::where('user_id', $user->id)

@@ -17,7 +17,7 @@ Route::middleware('auth:users')->group(function () {
                 ->name('carts.add');
         });
         Route::resource('carts', CartsController::class)
-            ->only(['index']);
+            ->only(['index', 'destroy']);
     });
 });
 
