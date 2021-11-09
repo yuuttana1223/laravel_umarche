@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ComponentTestController;
 use App\Http\Controllers\LifeCycleTestController;
+use App\Http\Controllers\User\CartsController;
 use App\Http\Controllers\User\ItemsController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,10 @@ Route::middleware('auth:users')->group(function () {
         ->name('items.index');
     Route::resource('items', ItemsController::class)
         ->only(['show']);
+    Route::prefix('carts')->group(function () {
+        Route::post('add', [CartsController::class, 'add'])
+            ->name('carts.add');
+    });
 });
 
 

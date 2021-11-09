@@ -45,7 +45,9 @@
                             <p class="mt-3 leading-relaxed">
                                 {{ $product->information }}
                             </p>
-                            <div class="mt-3 text-center md:flex md:justify-around">
+                            <form action="{{ route('user.carts.add') }}" method="post"
+                                class="mt-3 text-center md:flex md:justify-around">
+                                @csrf
                                 <p class="mt-3 text-2xl font-medium text-gray-900 title-font">
                                     {{ number_format($product->price) }}
                                     <span class="mt-3 text-sm text-gray-500">円(税込)</span>
@@ -68,9 +70,12 @@
                                         <p class="mt-3 ml-2 text-sm text-red-500">(残り{{ $quantity }}個)</p>
                                     @endif
                                 </div>
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <button
-                                    class="px-2 py-1 mt-3 text-white bg-indigo-500 border-0 rounded md:py-2 md:px-6 focus:outline-none hover:bg-indigo-600 md:block">カートに入れる</button>
-                            </div>
+                                    class="px-2 py-1 mt-3 text-white bg-indigo-500 border-0 rounded md:py-2 md:px-6 focus:outline-none hover:bg-indigo-600 md:block">
+                                    カートに入れる
+                                </button>
+                            </form>
                         </div>
                     </div>
                     <div class="my-8 text-center border-t border-green-400">
