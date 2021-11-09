@@ -11,7 +11,8 @@
         "intervention/image": "^2.7",
         "laravel/framework": "^8.54",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "stripe/stripe-php": "^7.100"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

@@ -15,6 +15,8 @@ Route::middleware('auth:users')->group(function () {
         Route::prefix('carts')->group(function () {
             Route::post('add', [CartsController::class, 'add'])
                 ->name('carts.add');
+            Route::get('checkout', [CartsController::class, 'checkout'])
+                ->name('carts.checkout');
         });
         Route::resource('carts', CartsController::class)
             ->only(['index', 'destroy']);

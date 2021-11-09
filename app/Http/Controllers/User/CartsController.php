@@ -7,6 +7,8 @@ use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class CartsController extends Controller
 {
@@ -70,5 +72,38 @@ class CartsController extends Controller
                 'message' => 'カートに商品を追加しました。',
                 'status' => 'info',
             ]);
+    }
+
+    public function checkout(User $user)
+    {
+        $products = $user->products;
+
+        $lineItems = [];
+        foreach ($products as $product) {
+            $lineItem = [
+                'name' => $product->name,
+                'description' => $product->information,
+                'amount' => $product->price,
+                'currency' => 'jpy',
+                'quantity' => $product->pivot->quantity,
+            ];
+            array_push($lineItems, $lineItem);
+        }
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+        $checkoutSession = Session::create([
+            'line_items' => [
+                $lineItems
+            ],
+            'payment_method_types' => [
+                'card',
+            ],
+            'mode' => 'payment',
+            'success_url' => route('user.items.index'),
+            'cancel_url' => route('user.carts.index'),
+        ]);
+        $publicKey = env('STRIPE_PUBLIC_KEY ');
+
+        return view('user.carts.checkout', compact('checkoutSession', 'publicKey'));
     }
 }
