@@ -9,6 +9,7 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    <x-flash-message :status="session('status')" />
                     @foreach ($products as $product)
                         <div class="mb-2 md:flex md:items-center">
                             <x-thumbnail filename="{{ $product->imageFirst->filename }}" dirname="products"
@@ -24,7 +25,7 @@
                                 </h3>
                             </div>
                             <form action="{{ route('user.carts.destroy', [Auth::user(), $product->pivot->id]) }}"
-                                method="post" class="md:w-2/12">
+                                method="post" class="delete md:w-2/12">
                                 @csrf
                                 @method('DELETE')
                                 <button>
@@ -44,4 +45,5 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('js/user/carts/index.js') }}"></script>
 </x-app-layout>

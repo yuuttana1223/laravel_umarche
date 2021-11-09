@@ -40,7 +40,11 @@ class CartsController extends Controller
         $cart->delete();
 
         return redirect()
-            ->route('user.carts.index', $user);
+            ->route('user.carts.index', $user)
+            ->with([
+                'message' => 'カートの商品を削除しました。',
+                'status' => 'alert',
+            ]);
     }
 
     public function add(Request $request, User $user)
@@ -63,7 +67,7 @@ class CartsController extends Controller
         return redirect()
             ->route('user.carts.index', $user)
             ->with([
-                'message' => '',
+                'message' => 'カートに商品を追加しました。',
                 'status' => 'info',
             ]);
     }
