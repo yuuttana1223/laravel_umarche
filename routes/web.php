@@ -11,9 +11,13 @@ Route::middleware('auth:users')->group(function () {
         ->name('items.index');
     Route::resource('items', ItemsController::class)
         ->only(['show']);
-    Route::prefix('carts')->group(function () {
-        Route::post('add', [CartsController::class, 'add'])
-            ->name('carts.add');
+    Route::prefix('users/{user}')->group(function () {
+        Route::prefix('carts')->group(function () {
+            Route::post('add', [CartsController::class, 'add'])
+                ->name('carts.add');
+        });
+        Route::resource('carts', CartsController::class)
+            ->only(['index']);
     });
 });
 

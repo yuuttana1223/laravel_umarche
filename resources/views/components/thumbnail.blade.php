@@ -1,5 +1,9 @@
 @if (empty($filename))
-    <img src="{{ asset('images/no_image.jpg') }}" alt="商品画像なし">
+    <img {{ $attributes }} src="{{ asset('images/no_image.jpg') }}" alt="画像なし">
 @else
-    <img src="{{ asset("storage/{$dirname}/{$filename}") }}" alt="商品の画像">
+    <img {{ $attributes->merge([
+        'class' => '',
+        'alt' => '画像',
+    ]) }}
+        src="{{ asset("storage/{$dirname}/{$filename}") }}">
 @endif

@@ -15,7 +15,8 @@
                                 <a href="{{ route('user.items.show', ['item' => $product->id]) }}"
                                     class="block p-2 border rounded-md md:p-4 md:pb-8">
                                     <div class="w-60 h-36">
-                                        <x-thumbnail filename="{{ $product->filename ?? '' }}" dirname="products" />
+                                        <x-thumbnail filename="{{ $product->filename ?? '' }}" dirname="products"
+                                            alt="{{ $product->name }}" />
                                     </div>
                                     <div class="mt-4">
                                         <h3 class="mb-1 text-xs tracking-widest text-gray-500 title-font">

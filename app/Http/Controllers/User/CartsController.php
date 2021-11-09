@@ -4,20 +4,46 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartsController extends Controller
 {
-    public function add(Request $request)
+    public function __construct()
     {
-        $cart = Cart::where('user_id', Auth::id())
+        $this->middleware(function ($request, $next) {
+            $user = $request->route('user');
+            if (Auth::id() !== $user->id) {
+                abort(404);
+            }
+            return $next($request);
+        })->only(['add', 'index']);
+    }
+
+    public function index(User $user)
+    {
+        $products = $user->products;
+        $totalAmount = 0;
+        foreach ($products as $product) {
+            $totalAmount += $product->price * $product->pivot->quantity;
+        }
+
+        return view(
+            'user.carts.index',
+            compact('products', 'totalAmount')
+        );
+    }
+
+    public function add(Request $request, User $user)
+    {
+        $cart = Cart::where('user_id', $user->id)
             ->where('product_id', $request->product_id)
             ->first();
 
         if (is_null($cart)) {
             Cart::create([
-                'user_id' => Auth::id(),
+                'user_id' => $user->id,
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
             ]);
@@ -25,5 +51,12 @@ class CartsController extends Controller
             $cart->quantity += $request->quantity;
             $cart->save();
         }
+
+        return redirect()
+            ->route('user.carts.index', $user)
+            ->with([
+                'message' => '',
+                'status' => 'info',
+            ]);
     }
 }

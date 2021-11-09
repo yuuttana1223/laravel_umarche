@@ -19,8 +19,8 @@
                                     @foreach ($product->getImages() as $image)
                                         @if (!is_null($image))
                                             <div class="swiper-slide">
-                                                <img src="{{ asset("storage/products/{$image->filename}") }}"
-                                                    alt="{{ $image->title ?? '商品画像' . $loop->index + 1 }}">
+                                                <x-thumbnail filename="{{ $image->filename }}" dirname="products"
+                                                    alt="{{ $image->title ?? '商品画像' . $loop->index + 1 }}" />
                                             </div>
                                         @endif
                                     @endforeach
@@ -45,7 +45,7 @@
                             <p class="mt-3 leading-relaxed">
                                 {{ $product->information }}
                             </p>
-                            <form action="{{ route('user.carts.add') }}" method="post"
+                            <form action="{{ route('user.carts.add', Auth::user()) }}" method="post"
                                 class="mt-3 text-center md:flex md:justify-around">
                                 @csrf
                                 <p class="mt-3 text-2xl font-medium text-gray-900 title-font">
@@ -83,9 +83,9 @@
                         <h2 class="mt-4">{{ $product->shop->name }}</h2>
                         <div class="mt-4">
                             @if (!is_null($product->shop->filename))
-                                <img src="{{ asset("storage/shops/{$product->shop->filename}") }}"
-                                    alt="{{ "{$product->shop->name}の画像" }}"
-                                    class="object-cover w-40 h-40 mx-auto rounded-full">
+                                <x-thumbnail :filename="$product->shop->filename" dirname="shops"
+                                    class="object-cover w-40 h-40 mx-auto rounded-full"
+                                    alt="{{ $product->shop->name }}" />
                             @endif
                         </div>
                         <x-modal>

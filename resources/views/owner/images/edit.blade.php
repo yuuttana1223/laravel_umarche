@@ -21,7 +21,8 @@
                         </div>
                         <div class="w-1/2 p-2 mx-auto">
                             <div class="w-full">
-                                <x-thumbnail :filename="$image->filename" dirname="products" />
+                                <x-thumbnail :filename="$image->filename" dirname="products"
+                                    alt="{{ $image->title ?? '' }}" />
                             </div>
                         </div>
                         <div class="flex justify-around w-full p-2 mt-4">

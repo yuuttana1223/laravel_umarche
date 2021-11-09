@@ -35,7 +35,7 @@ class ItemsController extends Controller
             )
             ->get();
 
-        return view('user.index', compact('products'));
+        return view('user.items.index', compact('products'));
     }
 
     public function show($id)
@@ -44,7 +44,7 @@ class ItemsController extends Controller
         $quantity = $product->stocks()->sum('quantity');
 
         return view(
-            'user.show',
+            'user.items.show',
             compact('product', 'quantity')
         );
     }
