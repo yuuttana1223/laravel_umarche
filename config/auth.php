@@ -13,8 +13,9 @@ return [
     |
     */
 
+    // guardをwebからusersに変更
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'users',
         'passwords' => 'users',
     ],
 
@@ -35,10 +36,25 @@ return [
     |
     */
 
+    // Route::get('test', function() {})->middleware('auth:ガード名');
+    // 上で認証されたユーザだけにアクセス許可
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+        // webと一緒(webは消してもいいかな？)
+        'users' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'owners' => [
+            'driver' => 'session',
+            'provider' => 'owners',
+        ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admin',
         ],
     ],
 
@@ -63,6 +79,14 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'owners' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Owner::class,
+        ],
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
 
         // 'users' => [
@@ -90,6 +114,18 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60, // 数回ミスったときにログインができなくなる秒数
+        ],
+        'owners' => [
+            'provider' => 'owners',
+            'table' => 'owner_password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admin' => [
+            'provider' => 'admin',
+            'table' => 'admin_password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
