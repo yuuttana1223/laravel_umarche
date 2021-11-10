@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Constants\ProductConstant;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,15 +82,32 @@ class CartsController extends Controller
 
         $lineItems = [];
         foreach ($products as $product) {
-            $lineItem = [
-                'name' => $product->name,
-                'description' => $product->information,
-                'amount' => $product->price,
-                'currency' => 'jpy',
-                'quantity' => $product->pivot->quantity,
-            ];
-            array_push($lineItems, $lineItem);
+            $quantity = $product->stocks->sum('quantity');
+            if ($product->pivot->quanatity > $quantity) {
+                return redirect()
+                    ->route('user.carts.index', $user);
+            } else {
+                $lineItem = [
+                    'name' => $product->name,
+                    'description' => $product->information,
+                    'amount' => $product->price,
+                    'currency' => 'jpy',
+                    'quantity' => $product->pivot->quantity,
+                ];
+                array_push($lineItems, $lineItem);
+            }
         }
+
+        // 決済の間は商品を保持するために一旦減らす
+        foreach ($products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => ProductConstant::REDUCE,
+                'quantity' => $product->pivot->quanatity * -1
+            ]);
+        }
+
+        dd('aaa');
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         $checkoutSession = Session::create([

@@ -154,7 +154,7 @@ class ProductsController extends Controller
 
                 $quantity = (int) $request->quantity;
                 $type = $request->type;
-                $quantity = ($type === \ProductConstant::REDUCE) ? $quantity * -1 : $quantity;
+                $quantity = ($type === ProductConstant::REDUCE) ? $quantity * -1 : $quantity;
 
                 Stock::create([
                     'product_id' => $product->id,
