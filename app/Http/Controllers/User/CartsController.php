@@ -79,12 +79,10 @@ class CartsController extends Controller
 
     public function checkout(User $user)
     {
-        $products = $user->products;
-
         $lineItems = [];
-        foreach ($products as $product) {
+        foreach ($user->products as $product) {
             $quantity = $product->stocks->sum('quantity');
-            if ($product->pivot->quanatity > $quantity) {
+            if ($product->pivot->quantity > $quantity) {
                 return redirect()
                     ->route('user.carts.index', $user);
             } else {
@@ -100,15 +98,17 @@ class CartsController extends Controller
         }
 
         // 決済の間は商品を保持するために一旦減らす
-        foreach ($products as $product) {
+        foreach ($user->products as $product) {
             Stock::create([
                 'product_id' => $product->id,
                 'type' => ProductConstant::REDUCE,
-                'quantity' => $product->pivot->quanatity * -1
+                'quantity' => $product->pivot->quantity * -1
             ]);
         }
 
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+
 
         $checkoutSession = Session::create([
             'line_items' => [
@@ -119,7 +119,7 @@ class CartsController extends Controller
             ],
             'mode' => 'payment',
             'success_url' => route('user.carts.success', $user),
-            'cancel_url' => route('user.carts.index', $user),
+            'cancel_url' => route('user.carts.cancel', $user),
         ]);
         return redirect($checkoutSession->url, 303);
     }
@@ -128,6 +128,27 @@ class CartsController extends Controller
     {
         $user->products()->detach();
         return redirect()
-            ->route('user.items.index');
+            ->route('user.items.index')
+            ->with([
+                'message' => 'カート内の商品を購入しました。',
+                'status' => 'info',
+            ]);
+    }
+
+    public function cancel(User $user)
+    {
+        foreach ($user->products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => ProductConstant::ADD,
+                'quantity' => $product->pivot->quantity
+            ]);
+        }
+        return redirect()
+            ->route('user.carts.index', $user)
+            ->with([
+                'message' => 'カート内の商品購入をキャンセルしました。',
+                'status' => 'alert',
+            ]);;
     }
 }

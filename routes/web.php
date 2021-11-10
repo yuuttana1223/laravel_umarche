@@ -19,6 +19,8 @@ Route::middleware('auth:users')->group(function () {
                 ->name('carts.checkout');
             Route::get('success', [CartsController::class, 'success'])
                 ->name('carts.success');
+            Route::get('cancel', [CartsController::class, 'cancel'])
+                ->name('carts.cancel');
         });
         Route::resource('carts', CartsController::class)
             ->only(['index', 'destroy']);
