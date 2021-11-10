@@ -38,6 +38,16 @@
                             </form>
                         </div>
                     @endforeach
+                    <h2 class="my-2">
+                        小計: {{ number_format($totalAmount) }}
+                        <span class="text-sm text-gray-700">
+                            円(税込)
+                        </span>
+                    </h2>
+                    <div class="text-right">
+                        <a href="{{ route('user.carts.checkout', Auth::user()) }}" type="button"
+                            class="px-2 py-1 mt-3 text-white bg-indigo-500 border-0 rounded md:py-2 md:px-6 focus:outline-none hover:bg-indigo-600">購入する</a>
+                    </div>
                     @if ($products->isEmpty())
                         <h2 class="text-red-500">カートに商品が入っておりません。</h2>
                     @endif

@@ -107,7 +107,6 @@ class CartsController extends Controller
             ]);
         }
 
-        dd('aaa');
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         $checkoutSession = Session::create([
@@ -119,10 +118,9 @@ class CartsController extends Controller
             ],
             'mode' => 'payment',
             'success_url' => route('user.items.index'),
-            'cancel_url' => route('user.carts.index'),
+            'cancel_url' => route('user.carts.index', $user),
         ]);
-        $publicKey = env('STRIPE_PUBLIC_KEY ');
-
-        return view('user.carts.checkout', compact('checkoutSession', 'publicKey'));
+        // リダイレクトが新しくアップロードされたリソースではなく、 (確認ページやアップロード進捗ページのような) 別なページにリンクする
+        return redirect($checkoutSession->url, 303);
     }
 }
