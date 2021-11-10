@@ -22,7 +22,7 @@ class CartsController extends Controller
                 abort(404);
             }
             return $next($request);
-        })->only(['add', 'index']);
+        });
     }
 
     public function index(User $user)
@@ -58,11 +58,12 @@ class CartsController extends Controller
             ->first();
 
         if (is_null($cart)) {
-            Cart::create([
-                'user_id' => $user->id,
-                'product_id' => $request->product_id,
-                'quantity' => $request->quantity,
-            ]);
+            $user->products()->attach(
+                $request->product_id,
+                [
+                    'quantity' => $request->quantity,
+                ]
+            );
         } else {
             $cart->quantity += $request->quantity;
             $cart->save();
@@ -117,10 +118,16 @@ class CartsController extends Controller
                 'card',
             ],
             'mode' => 'payment',
-            'success_url' => route('user.items.index'),
+            'success_url' => route('user.carts.success', $user),
             'cancel_url' => route('user.carts.index', $user),
         ]);
-        // リダイレクトが新しくアップロードされたリソースではなく、 (確認ページやアップロード進捗ページのような) 別なページにリンクする
         return redirect($checkoutSession->url, 303);
+    }
+
+    public function success(User $user)
+    {
+        $user->products()->detach();
+        return redirect()
+            ->route('user.items.index');
     }
 }
