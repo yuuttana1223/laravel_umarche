@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\PrimaryCategory;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -23,11 +24,19 @@ class ItemsController extends Controller
 
     public function index(Request $request)
     {
+
         $products = Product::availableItems()
+            ->selectCategory($request->category)
             ->sortOrder($request->sort)
             ->paginate($request->pagination ?? '20'); // 初期値は15
 
-        return view('user.items.index', compact('products'));
+        $categories = PrimaryCategory::with('categories')
+            ->get();
+
+        return view(
+            'user.items.index',
+            compact('products', 'categories')
+        );
     }
 
     public function show($id)

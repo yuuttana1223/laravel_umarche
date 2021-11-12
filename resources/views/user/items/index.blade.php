@@ -1,10 +1,29 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between">
-            <h1 class="text-xl font-semibold leading-tight text-gray-800">
-                商品一覧
-            </h1>
-            <form action="{{ route('user.items.index') }}" method="get" id="select-form" class="flex">
+        <h1 class="text-xl font-semibold leading-tight text-gray-800">
+            商品一覧
+        </h1>
+
+        <form action="{{ route('user.items.index') }}" method="get" id="select-form" class="my-2">
+            <div class="md:text-right">
+                <select name="category" class="mb-2">
+                    <option value="0" {{ \Request::get('category') === '0' ? 'selected' : '' }}>全て</option>
+                    @foreach ($categories as $primaryCategory)
+                        <optgroup label="{{ $primaryCategory->name }}">
+                            @foreach ($primaryCategory->categories as $secondaryCategory)
+                                <option value="{{ $secondaryCategory->id }}"
+                                    {{ \Request::get('category') === "$secondaryCategory->id" ? 'selected' : '' }}>
+                                    {{ $secondaryCategory->name }}
+                                </option>
+                            @endforeach
+                    @endforeach
+                </select>
+                <input name="keyword" type="text" placeholder="キーワードを入力" value="{{ \Request::get('keyword') }}"
+                    class="py-2 border-gray-500">
+                <button
+                    class="px-6 py-2 text-white bg-indigo-500 border-0 rounded focus:outline-none hover:bg-indigo-600">検索する</button>
+            </div>
+            <div class="mt-2 md:flex md:justify-end">
                 <div>
                     <span class="text-sm">表示順</span><br>
                     <select name="sort" id="sort" class="mr-4">
@@ -32,20 +51,20 @@
                         </option>
                     </select>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </x-slot>
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="flex flex-wrap">
+                    <div class="md:flex md:flex-wrap">
                         @foreach ($products as $product)
-                            <div class="w-1/4 p-2">
+                            <div class="p-2 md:w-1/4">
                                 <a href="{{ route('user.items.show', ['item' => $product->id]) }}"
                                     class="block p-2 border rounded-md md:p-4 md:pb-8">
-                                    <div class="w-60 h-36">
+                                    <div class="md:w-60 md:h-36">
                                         <x-thumbnail filename="{{ $product->filename ?? '' }}" dirname="products"
                                             alt="{{ $product->name }}" />
                                     </div>
