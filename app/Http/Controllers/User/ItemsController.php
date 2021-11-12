@@ -25,7 +25,7 @@ class ItemsController extends Controller
     {
         $products = Product::availableItems()
             ->sortOrder($request->sort)
-            ->paginate($request->pagination);
+            ->paginate($request->pagination ?? '20'); // 初期値は15
 
         return view('user.items.index', compact('products'));
     }
