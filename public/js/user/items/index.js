@@ -1,6 +1,12 @@
 "use strict";
 {
-  document.getElementById("sort").addEventListener("change", (e) => {
-    document.getElementById("sort-form").submit();
+  const form = document.getElementById("select-form");
+
+  document.getElementById("sort").addEventListener("change", () => {
+    form.submit();
+  });
+
+  document.getElementById("pagination").addEventListener("change", () => {
+    form.submit();
   });
 }

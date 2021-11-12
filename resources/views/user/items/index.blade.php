@@ -4,20 +4,34 @@
             <h1 class="text-xl font-semibold leading-tight text-gray-800">
                 商品一覧
             </h1>
-            <form action="{{ route('user.items.index') }}" method="get" id="sort-form">
-                @csrf
-                <span class="text-sm">表示順</span><br>
-                <select name="sort" id="sort" class="mr-4">
-                    <option value="{{ \ProductConstant::NEWER }}"
-                        {{ \Request::get('sort') === \ProductConstant::NEWER ? 'selected' : '' }}>新しい順</option>
-                    <option value="{{ \ProductConstant::OLDER }}"
-                        {{ \Request::get('sort') === \ProductConstant::OLDER ? 'selected' : '' }}>古い順</option>
-                    <option value="{{ \ProductConstant::CHEAPER }}"
-                        {{ \Request::get('sort') === \ProductConstant::CHEAPER ? 'selected' : '' }}>安い順</option>
-                    <option value="{{ \ProductConstant::HIGHER }}"
-                        {{ \Request::get('sort') === \ProductConstant::HIGHER ? 'selected' : '' }}>高い順</option>
-                </select>
-                <span>表示件数</span>
+            <form action="{{ route('user.items.index') }}" method="get" id="select-form" class="flex">
+                <div>
+                    <span class="text-sm">表示順</span><br>
+                    <select name="sort" id="sort" class="mr-4">
+                        <option value="{{ \ProductConstant::NEWER }}"
+                            {{ \Request::get('sort') === \ProductConstant::NEWER ? 'selected' : '' }}>新しい順</option>
+                        <option value="{{ \ProductConstant::OLDER }}"
+                            {{ \Request::get('sort') === \ProductConstant::OLDER ? 'selected' : '' }}>古い順</option>
+                        <option value="{{ \ProductConstant::CHEAPER }}"
+                            {{ \Request::get('sort') === \ProductConstant::CHEAPER ? 'selected' : '' }}>安い順</option>
+                        <option value="{{ \ProductConstant::HIGHER }}"
+                            {{ \Request::get('sort') === \ProductConstant::HIGHER ? 'selected' : '' }}>高い順</option>
+                    </select>
+                </div>
+                <div>
+                    <span class="text-sm">表示件数</span><br>
+                    <select name="pagination" id="pagination">
+                        <option value="20" {{ \Request::get('pagination') === '20' ? 'selected' : '' }}>
+                            20件
+                        </option>
+                        <option value="50" {{ \Request::get('pagination') === '50' ? 'selected' : '' }}>
+                            50件
+                        </option>
+                        <option value="100" {{ \Request::get('pagination') === '100' ? 'selected' : '' }}>
+                            100件
+                        </option>
+                    </select>
+                </div>
             </form>
         </div>
     </x-slot>
@@ -47,6 +61,10 @@
                             </div>
                         @endforeach
                     </div>
+                    {{ $products->appends([
+                            'sort' => \Request::get('sort'),
+                            'pagination' => \Request::get('pagination'),
+                        ])->links() }}
                 </div>
             </div>
         </div>
