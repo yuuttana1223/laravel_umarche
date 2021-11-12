@@ -1,8 +1,25 @@
 <x-app-layout>
     <x-slot name="header">
-        <h1 class="text-xl font-semibold leading-tight text-gray-800">
-            {{ __('ホーム') }}
-        </h1>
+        <div class="flex justify-between">
+            <h1 class="text-xl font-semibold leading-tight text-gray-800">
+                商品一覧
+            </h1>
+            <form action="{{ route('user.items.index') }}" method="get" id="sort-form">
+                @csrf
+                <span class="text-sm">表示順</span><br>
+                <select name="sort" id="sort" class="mr-4">
+                    <option value="{{ \ProductConstant::NEWER }}"
+                        {{ \Request::get('sort') === \ProductConstant::NEWER ? 'selected' : '' }}>新しい順</option>
+                    <option value="{{ \ProductConstant::OLDER }}"
+                        {{ \Request::get('sort') === \ProductConstant::OLDER ? 'selected' : '' }}>古い順</option>
+                    <option value="{{ \ProductConstant::CHEAPER }}"
+                        {{ \Request::get('sort') === \ProductConstant::CHEAPER ? 'selected' : '' }}>安い順</option>
+                    <option value="{{ \ProductConstant::HIGHER }}"
+                        {{ \Request::get('sort') === \ProductConstant::HIGHER ? 'selected' : '' }}>高い順</option>
+                </select>
+                <span>表示件数</span>
+            </form>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -34,4 +51,5 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('js/user/items/index.js') }}"></script>
 </x-app-layout>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ProductConstant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -105,5 +106,23 @@ class Product extends Model
                 'secondary_categories.name as categoryName',
                 'images.filename'
             );
+    }
+
+    public function scopeSortOrder($query, $sotrOrder = ProductConstant::NEWER)
+    {
+        switch ($sotrOrder) {
+            case ProductConstant::NEWER:
+                return $query->orderBy('products.created_at', 'desc');
+                break;
+            case ProductConstant::OLDER:
+                return $query->orderBy('products.created_at');
+                break;
+            case ProductConstant::CHEAPER:
+                return $query->orderBy('price');
+                break;
+            case ProductConstant::HIGHER:
+                return $query->orderBy('price', 'desc');
+                break;
+        }
     }
 }
