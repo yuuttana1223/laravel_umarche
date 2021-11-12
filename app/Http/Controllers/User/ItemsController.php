@@ -26,7 +26,8 @@ class ItemsController extends Controller
     {
 
         $products = Product::availableItems()
-            ->selectCategory($request->category)
+            ->selectCategory($request->category ?? '0')
+            ->searchKeyword($request->keyword)
             ->sortOrder($request->sort)
             ->paginate($request->pagination ?? '20'); // 初期値は15
 

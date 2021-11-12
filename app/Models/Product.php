@@ -126,11 +126,27 @@ class Product extends Model
         }
     }
 
-    public function scopeSelectCategory($query, $categoryId = 0)
+    public function scopeSelectCategory($query, $categoryId)
     {
-        if ($categoryId === 0) {
+        if ($categoryId === '0') {
             return $query;
         }
         return $query->where('secondary_category_id', $categoryId);
+    }
+
+    public function scopeSearchKeyword($query, $keyword)
+    {
+        if (is_null($keyword)) {
+            return;
+        }
+        $fullwidthToHalfwidth = mb_convert_kana($keyword, 's');
+
+        // スペースがあるところで分割して配列にする
+        $keywords = preg_split('/[\s]+/', $fullwidthToHalfwidth, -1, PREG_SPLIT_NO_EMPTY);
+        foreach ($keywords as $keyword) {
+            $query->where('products.name', 'like', "%$keyword%");
+        }
+
+        return $query;
     }
 }
