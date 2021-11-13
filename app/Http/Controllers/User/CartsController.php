@@ -4,9 +4,12 @@ namespace App\Http\Controllers\User;
 
 use App\Constants\ProductConstant;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOrderedMail;
+use App\Jobs\SendThanksMail;
 use App\Models\Cart;
 use App\Models\Stock;
 use App\Models\User;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Checkout\Session;
@@ -126,6 +129,15 @@ class CartsController extends Controller
 
     public function success(User $user)
     {
+        $cartItems = $user->products;
+        $products = CartService::getProductsInCart($cartItems);
+
+        SendThanksMail::dispatch($products, $user);
+
+        foreach ($products as $product) {
+            SendOrderedMail::dispatch($product, $user);
+        }
+
         $user->products()->detach();
         return redirect()
             ->route('user.items.index')

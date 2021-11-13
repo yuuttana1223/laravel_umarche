@@ -24,6 +24,6 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             UserSeeder::class,
         ]);
-        Stock::factory(100)->create();
+        Stock::factory(1000)->create();
     }
 }

@@ -3,44 +3,45 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\PrimaryCategory;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ItemsController extends Controller
 {
+    private Product $product;
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->product = Product::findOrFail($request->route('item'));
+            if ($this->product->is_selling === 0) {
+                abort(404);
+            }
+            return $next($request);
+        })->only('show');
+    }
+
     public function index(Request $request)
     {
-        $stocks = DB::table('t_stocks')
-            ->select('product_id', DB::raw('sum(quantity) as quantity'))
-            ->groupBy('product_id')
-            ->having('quantity', '>', 1);
+        $products = Product::availableItems()
+            ->selectCategory($request->category ?? '0')
+            ->searchKeyword($request->keyword)
+            ->sortOrder($request->sort)
+            ->paginate($request->pagination ?? '20'); // 初期値は15
 
-        $products = DB::table('products')
-            ->joinSub($stocks, 'stocks', function ($join) {
-                $join->on('products.id', '=', 'stocks.product_id');
-            })
-            ->join('shops', 'shops.id', '=', 'products.shop_id')
-            ->join('secondary_categories', 'secondary_categories.id', '=', 'products.secondary_category_id')
-            ->join('images', 'images.id', '=', 'products.image1')
-            ->where('shops.is_selling', true)
-            ->where('products.is_selling', true)
-            ->select(
-                'products.id',
-                'products.name as name',
-                'products.price',
-                'products.information',
-                'secondary_categories.name as categoryName',
-                'images.filename'
-            )
+        $categories = PrimaryCategory::with('categories')
             ->get();
 
-        return view('user.items.index', compact('products'));
+        return view(
+            'user.items.index',
+            compact('products', 'categories')
+        );
     }
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->product;
         $quantity = $product->stocks()->sum('quantity');
 
         return view(

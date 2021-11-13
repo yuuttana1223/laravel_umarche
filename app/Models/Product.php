@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Constants\ProductConstant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -78,5 +80,73 @@ class Product extends Model
         return $this->belongsToMany(User::class, 'carts')
             ->withPivot(['id', 'quantity'])
             ->withTimestamps();
+    }
+
+    public function scopeAvailableItems($query)
+    {
+        $stocks = DB::table('t_stocks')
+            ->select('product_id', DB::raw('sum(quantity) as quantity'))
+            ->groupBy('product_id')
+            ->having('quantity', '>', 1);
+
+        return $query
+            ->joinSub($stocks, 'stocks', function ($join) {
+                $join->on('products.id', '=', 'stocks.product_id');
+            })
+            ->join('shops', 'shops.id', '=', 'products.shop_id')
+            ->join('secondary_categories', 'secondary_categories.id', '=', 'products.secondary_category_id')
+            ->join('images', 'images.id', '=', 'products.image1')
+            ->where('shops.is_selling', true)
+            ->where('products.is_selling', true)
+            ->select(
+                'products.id',
+                'products.name as name',
+                'products.price',
+                'products.information',
+                'secondary_categories.name as categoryName',
+                'images.filename'
+            );
+    }
+
+    public function scopeSortOrder($query, $sotrOrder = ProductConstant::NEWER)
+    {
+        switch ($sotrOrder) {
+            case ProductConstant::NEWER:
+                return $query->orderBy('products.created_at', 'desc');
+                break;
+            case ProductConstant::OLDER:
+                return $query->orderBy('products.created_at');
+                break;
+            case ProductConstant::CHEAPER:
+                return $query->orderBy('price');
+                break;
+            case ProductConstant::HIGHER:
+                return $query->orderBy('price', 'desc');
+                break;
+        }
+    }
+
+    public function scopeSelectCategory($query, $categoryId)
+    {
+        if ($categoryId === '0') {
+            return $query;
+        }
+        return $query->where('secondary_category_id', $categoryId);
+    }
+
+    public function scopeSearchKeyword($query, $keyword)
+    {
+        if (is_null($keyword)) {
+            return;
+        }
+        $fullwidthToHalfwidth = mb_convert_kana($keyword, 's');
+
+        // スペースがあるところで分割して配列にする
+        $keywords = preg_split('/[\s]+/', $fullwidthToHalfwidth, -1, PREG_SPLIT_NO_EMPTY);
+        foreach ($keywords as $keyword) {
+            $query->where('products.name', 'like', "%$keyword%");
+        }
+
+        return $query;
     }
 }
