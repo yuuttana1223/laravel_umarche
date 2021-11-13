@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SendThanksMail;
 use App\Models\PrimaryCategory;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -25,10 +24,6 @@ class ItemsController extends Controller
 
     public function index(Request $request)
     {
-
-        // 非同期送信
-        SendThanksMail::dispatch();
-
         $products = Product::availableItems()
             ->selectCategory($request->category ?? '0')
             ->searchKeyword($request->keyword)

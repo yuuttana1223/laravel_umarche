@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Constants\ProductConstant;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendThanksMail;
 use App\Models\Cart;
 use App\Models\Stock;
 use App\Models\User;
@@ -82,8 +83,10 @@ class CartsController extends Controller
     {
         // Todo --------------
         $cartItems = $user->products;
-        $products = CartService::getProductInCart($cartItems);
+        $products = CartService::getProductsInCart($cartItems);
 
+        SendThanksMail::dispatch($products, $user);
+        dd('test');
 
         // -------------------
 
