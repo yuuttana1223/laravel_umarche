@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Constants\ProductConstant;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOrderedMail;
 use App\Jobs\SendThanksMail;
 use App\Models\Cart;
 use App\Models\Stock;
@@ -81,15 +82,6 @@ class CartsController extends Controller
 
     public function checkout(User $user)
     {
-        // Todo --------------
-        $cartItems = $user->products;
-        $products = CartService::getProductsInCart($cartItems);
-
-        SendThanksMail::dispatch($products, $user);
-        dd('test');
-
-        // -------------------
-
         $lineItems = [];
         foreach ($user->products as $product) {
             $quantity = $product->stocks->sum('quantity');
@@ -137,6 +129,15 @@ class CartsController extends Controller
 
     public function success(User $user)
     {
+        $cartItems = $user->products;
+        $products = CartService::getProductsInCart($cartItems);
+
+        SendThanksMail::dispatch($products, $user);
+
+        foreach ($products as $product) {
+            SendOrderedMail::dispatch($product, $user);
+        }
+
         $user->products()->detach();
         return redirect()
             ->route('user.items.index')
