@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Stock;
 use App\Models\User;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Checkout\Session;
@@ -79,6 +80,13 @@ class CartsController extends Controller
 
     public function checkout(User $user)
     {
+        // Todo --------------
+        $cartItems = $user->products;
+        $products = CartService::getProductInCart($cartItems);
+
+
+        // -------------------
+
         $lineItems = [];
         foreach ($user->products as $product) {
             $quantity = $product->stocks->sum('quantity');
