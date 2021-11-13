@@ -2,7 +2,18 @@
 
 ## インストール方法
 
+### 公式
+
+-   https://readouble.com/laravel/8.x/ja/sail.html
+
 ```sh
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
+    laravelsail/php80-composer:latest \
+    composer install --ignore-platform-reqs
+
 ./vendor/bin/sail up -d
 composer install
 npm install
@@ -28,8 +39,10 @@ STRIPE_SECRET_KEY
 コンテナを起動した後に
 
 ```sh
+# コンテナに入る
 ./vendor/bin/sail bash
-php artisan migrate:fresh --seed
+# マイグレーション
+php artisan migrate:refresh --seed
 ```
 
 と実行してください。(データベーステーブルとダミーデータが追加されれば OK)
@@ -43,3 +56,12 @@ php artisan migrate:fresh --seed
 1. php artisan storage:link で storage フォルダにリンクを作る
 2. storage/app/public/products フォルダ内に保存すると表示される(ファルダがない場合作成)
 3. ショップの画像も表示する場合は storage/app/public/shops フォルダを作成し、画像を保存する
+
+## section7 の補足
+
+-   決済のテストは stripe を利用しているので、.env に STRIPE_SECRET_KEY を追加してください。
+
+## section8 の補足
+
+-   メール処理には時間がかかるので、キューを使用
+    -   必要な場合は`php artisan queue:work`でワーカーを立ち上げて動作確認するようにしてください。
